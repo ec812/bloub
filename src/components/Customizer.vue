@@ -61,9 +61,11 @@ const PREVIEW_AT = 1
         :aria-pressed="c.id === color"
         @click="color = c.id"
       >
-        <!-- liseré interne : sinon la pastille creme disparait sur fond clair -->
+        <!-- liseré interne : sinon la pastille creme disparait sur fond clair,
+             et la pastille encre sur fond sombre — d'ou un liseré pris sur
+             `--ink`, qui change de camp avec le theme -->
         <span
-          class="block h-[78%] w-[78%] rounded-full ring-1 ring-black/10 ring-inset"
+          class="block h-[78%] w-[78%] rounded-full ring-1 ring-[var(--ink)]/10 ring-inset"
           :style="{ background: c.hex }"
         />
       </button>

@@ -2,7 +2,17 @@ import { describe, expect, it } from 'vitest'
 import { BotEngine, type RenderedEye } from './engine'
 import { decalageDesYeux, POUR_TESTS } from './eyefit'
 import { EXPRESSIONS } from './expressions'
-import { DEFAULT_SHAPE, SHAPES, SHAPE_BY_ID } from './skins'
+import {
+  COLORS,
+  COLOR_BY_ID,
+  contraste,
+  couleurVisible,
+  DEFAULT_SHAPE,
+  inverseClarte,
+  luminance,
+  SHAPES,
+  SHAPE_BY_ID
+} from './skins'
 import { STATES, type StateId } from './states'
 
 /**
@@ -321,5 +331,58 @@ describe('formes du personnalisateur', () => {
     const t = performance.now()
     POUR_TESTS.batir()
     expect(performance.now() - t).toBeLessThan(200)
+  })
+})
+
+/**
+ * Visibilite du corps sur son fond (la regle du favicon, etendue au site).
+ *
+ * Le fond est le seul pilotage : un export a fond blanc ou transparent ne
+ * declenche rien, quel que soit le theme du site.
+ */
+describe('visibilite du corps sur son fond', () => {
+  it('ne change AUCUNE couleur du personnalisateur sur fond clair', () => {
+    // le theme clair ne doit pas bouger d'un pixel
+    for (const c of COLORS) {
+      expect(couleurVisible(c.hex, '#f9f9f9'), c.id).toBe(c.hex)
+      expect(couleurVisible(c.hex, '#ffffff'), c.id).toBe(c.hex)
+    }
+  })
+
+  it('inverse un corps qui se confond avec un fond sombre', () => {
+    // le disque noir du favicon : invisible sur une barre d'onglets noire
+    const fond = '#1e222b'
+    const encre = COLOR_BY_ID.get('encre')!.hex
+    expect(couleurVisible(encre, fond)).not.toBe(encre)
+    expect(luminance(couleurVisible(encre, fond))).toBeGreaterThan(0.8)
+    // et le meme encre reste noir sur le fond clair du site
+    expect(couleurVisible(encre, '#f9f9f9')).toBe(encre)
+  })
+
+  it('laisse les couleurs deja visibles sur le fond sombre', () => {
+    const fond = '#1e222b'
+    for (const c of COLORS) {
+      if (contraste(c.hex, fond) >= 2.2) expect(couleurVisible(c.hex, fond), c.id).toBe(c.hex)
+    }
+    // sinon la boucle ci-dessus ne prouverait rien : il faut des deux cas
+    expect(COLORS.some((c) => couleurVisible(c.hex, fond) === c.hex)).toBe(true)
+    expect(COLORS.some((c) => couleurVisible(c.hex, fond) !== c.hex)).toBe(true)
+  })
+
+  it('inverse la clarte en gardant teinte et saturation', () => {
+    // le gris pur reste un gris pur : aucune teinte n'est inventee au passage
+    expect(inverseClarte('#0a0a0c')).toBe('#f3f3f5')
+    expect(inverseClarte('#808080')).toBe('#7f7f7f')
+    // aller-retour : l'inversion est une involution a l'arrondi 8 bits pres
+    for (const c of COLORS) {
+      const retour = inverseClarte(inverseClarte(c.hex))
+      expect(luminance(retour), c.id).toBeCloseTo(luminance(c.hex), 1)
+    }
+  })
+
+  it('mesure le contraste comme la WCAG', () => {
+    expect(contraste('#ffffff', '#000000')).toBeCloseTo(21, 1)
+    expect(contraste('#000000', '#ffffff')).toBeCloseTo(21, 1)
+    expect(contraste('#123456', '#123456')).toBeCloseTo(1, 5)
   })
 })

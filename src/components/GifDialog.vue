@@ -32,7 +32,7 @@ function confirm() {
 <template>
   <dialog
     ref="boite"
-    class="dialogue m-auto w-80 rounded-2xl bg-white p-5 text-[var(--ink)] shadow-xl"
+    class="dialogue m-auto w-80 rounded-2xl bg-[var(--surface)] p-5 text-[var(--ink)] shadow-xl"
     :aria-label="t('export.gifTitle')"
     @close="open = false"
     @cancel.prevent="open = false"
@@ -48,7 +48,7 @@ function confirm() {
         <label
           v-for="(choix, i) in FONDS_GIF"
           :key="choix"
-          class="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition hover:bg-black/5"
+          class="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition hover:bg-[var(--ink)]/5"
         >
           <input
             v-model="fond"
@@ -68,7 +68,7 @@ function confirm() {
       <div class="flex justify-end gap-2">
         <button
           type="button"
-          class="h-8 cursor-pointer rounded-lg px-3 text-xs text-[var(--muted)] transition hover:bg-black/5 hover:text-[var(--ink)]"
+          class="h-8 cursor-pointer rounded-lg px-3 text-xs text-[var(--muted)] transition hover:bg-[var(--ink)]/5 hover:text-[var(--ink)]"
           @click="open = false"
         >
           {{ t('dialog.cancel') }}

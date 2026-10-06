@@ -44,6 +44,8 @@ import {
 import { HUMEURS } from '@/ui/gaze'
 import { INTRO, INTRO_GAZE, POSE_AT, introDue } from '@/ui/intro'
 import { ecris, lis, type NomStocke } from '@/ui/stockage'
+// `fond` seul est deja pris plus bas (`fond` local de `exporte`, le fond de l'export)
+import { fond as fondRendu } from '@/ui/theme'
 import {
   blockAt,
   blocksWith,
@@ -754,6 +756,7 @@ watch(
           :shape="shape"
           :color="color"
           :expression="expression"
+          :paper="fondRendu.page"
           :frozen-at="POSES[s.id]"
         />
         <figcaption class="text-xs text-[var(--muted)]">{{ t(`states.${s.id}`) }}</figcaption>
@@ -775,11 +778,11 @@ watch(
     <button
       v-else
       type="button"
-      class="fixed top-5 right-5 z-30 flex cursor-pointer items-center gap-1.5 rounded-lg bg-white/80 px-2.5 py-1.5 text-xs text-[var(--muted)] shadow-sm backdrop-blur transition hover:text-[var(--ink)]"
+      class="fixed top-5 right-5 z-30 flex cursor-pointer items-center gap-1.5 rounded-lg bg-[var(--surface)]/80 px-2.5 py-1.5 text-xs text-[var(--muted)] shadow-sm backdrop-blur transition hover:text-[var(--ink)]"
       @click="preview = false"
     >
       {{ t('preview.exit') }}
-      <kbd class="rounded bg-black/5 px-1 py-0.5 text-[10px]">{{ t('preview.key') }}</kbd>
+      <kbd class="rounded bg-[var(--ink)]/5 px-1 py-0.5 text-[10px]">{{ t('preview.key') }}</kbd>
     </button>
 
     <!-- La place de la barre de montage n'est reservee QUE la ou elle existe.
@@ -872,6 +875,7 @@ watch(
             :shape="forme"
             :color="color"
             :expression="humeur ?? expression"
+            :paper="fondRendu.page"
             :follow="view === 'reglages'"
             :gaze="intro ? INTRO_GAZE : null"
           />

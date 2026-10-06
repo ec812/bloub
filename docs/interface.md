@@ -103,6 +103,29 @@ Its size is computed on the space actually available
 (`calc((100vw - 7rem) / 3.05)`, 3.05 being the measured width of the word in ems):
 in `vw` alone its last character ended up off screen.
 
+## Le theme sombre echange les jetons, il ne reecrit aucune regle
+
+`data-theme` sur `<html>` (pose avant la premiere peinture par un script d'amorce
+de `index.html`, tenu ensuite par `src/ui/theme.ts`) selectionne la palette dans
+`styles.css`. Le sombre ne reecrit rien : **`--ink` et `--paper` changent de
+camp**, et tout ce qui est construit sur leur melange — boutons
+`bg-[var(--ink)] text-[var(--paper)]`, voiles `bg-[var(--ink)]/5`, le degrade du
+grand mot via `--ink-rgb` — s'inverse avec, sans une regle de plus. Les surfaces
+levees (boites de dialogue, menus, vignette retenue) sont `--surface`, jamais
+`bg-white` en dur.
+
+Le bot, lui, ne connait pas le theme : c'est son **fond** (`paper`) qui decide.
+`couleurVisible` (`src/bot/skins.ts`) inverse la clarte d'un corps qui se
+confond avec son fond sombre — la regle du favicon, « le corps s'inverse en
+theme sombre, sinon un disque noir disparait ». Commandee par le fond et non par
+le theme, donc un export (fond blanc ou transparent) garde toujours les couleurs
+vraies du personnalisateur, et le theme clair ne la declenche jamais. Les yeux
+sont des trous remplis de `paper` : ils restent le fond, dans les deux eclairages.
+
+Les fonds passes au bot viennent de `FONDS` dans `src/ui/theme.ts`, miroir
+documente des jetons de `styles.css` — le SVG du bot n'accepte que des hex
+litteraux (`capture.ts`), aucune `var(--...)`. Les deux listes changent ensemble.
+
 ## The URL describes the player, not the views
 
 `#etat=` is only written from the Animations view. Writing it elsewhere fired a

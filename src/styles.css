@@ -8,12 +8,27 @@
    * noir de la video, lui, n'a pas bouge — c'est celui du bot, dans skins.ts
    * (`encre`, #0a0a0c). Les deux ne doivent pas etre confondus : changer
    * celle-ci retouche le decor, changer l'autre casse la ressemblance.
+   *
+   * En theme sombre les deux roles s'inversent : `--ink` devient clair et
+   * `--paper` sombre, et tout ce qui est construit sur leur melange — boutons
+   * `bg-[var(--ink)] text-[var(--paper)]`, voiles, degrades — s'inverse avec,
+   * sans une regle de plus.
    */
   --ink: #17203a;
   --line: #e3e5ea;
   --muted: #6e7382;
   /* Rouge d'interface pour les actions destructrices — choisi, comme --ink. */
   --danger: #d63c34;
+  /* Surfaces levees : boites de dialogue, menus, vignette retenue de la piste. */
+  --surface: #ffffff;
+  /*
+   * `--ink` en composantes, pour les degrades et voiles en transparence
+   * (`rgb(var(--ink-rgb) / 0.22)`). Un `color-mix` donnerait la meme chose mais
+   * pas dans un `background-clip: text`, ou c'est le seul degrade du projet.
+   */
+  --ink-rgb: 23 32 58;
+  /* Controles natifs (ascenseurs, curseurs) dans le meme eclairage que la page. */
+  color-scheme: light;
 
   /**
    * Hauteur de la barre de montage. Elle est fixee en bas, donc c'est la scene
@@ -31,6 +46,34 @@
    * depassement, comme tout le reste du projet.
    */
   --bascule: 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+ * Theme sombre : les memes jetons, echanges. `--paper` et `--ink` changent de
+ * camp (et `--ink-rgb` avec eux), les autres suivent.
+ *
+ * Pose par `src/ui/theme.ts` sur `data-theme` (l'amorce de `index.html` le pose
+ * deja avant la premiere peinture) : c'est l'attribut qui pilote, la preference
+ * du systeme n'etant qu'une des deux facons de l'arriver — « Système » y
+ * repond, « Clair » le force a s'effacer, et un theme choisi doit survivre a un
+ * changement de preference de l'OS en cours de session.
+ *
+ * `--ink` clair et non blanc : la composante bleue du bleu nuit est conservee,
+ * comme `inverseClarte` conserve la teinte du corps du bot.
+ *
+ * Les valeurs sont choisies, pas relevees — la seule mesure du projet est
+ * celle du bot, et son fond clair (`--paper` de depart, la video) ne bouge
+ * pas : un export reste noir sur blanc quel que soit le theme du site.
+ */
+[data-theme='sombre'] {
+  --paper: #1e222b;
+  --ink: #e8ebf2;
+  --line: #343b49;
+  --muted: #969eb0;
+  --danger: #ef6f66;
+  --surface: #2a2f3a;
+  --ink-rgb: 232 235 242;
+  color-scheme: dark;
 }
 
 /*
@@ -194,9 +237,9 @@ body,
   padding-right: 0.1em;
   background: linear-gradient(
     180deg,
-    rgb(23 32 58 / 0.22) 0%,
-    rgb(23 32 58 / 0.1) 48%,
-    rgb(23 32 58 / 0) 88%
+    rgb(var(--ink-rgb) / 0.22) 0%,
+    rgb(var(--ink-rgb) / 0.1) 48%,
+    rgb(var(--ink-rgb) / 0) 88%
   );
   -webkit-background-clip: text;
   background-clip: text;

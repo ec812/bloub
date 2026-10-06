@@ -272,7 +272,7 @@ function onRemove() {
         <span class="group relative flex">
           <button
             type="button"
-            class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg text-[var(--muted)] transition hover:bg-black/5 hover:text-[var(--ink)]"
+            class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg text-[var(--muted)] transition hover:bg-[var(--ink)]/5 hover:text-[var(--ink)]"
             :aria-label="t('timeline.preview')"
             @click="emit('preview')"
           >

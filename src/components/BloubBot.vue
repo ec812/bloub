@@ -11,6 +11,7 @@ import {
 } from '@/bot/expressions'
 import {
   COLOR_BY_ID,
+  couleurVisible,
   DEFAULT_COLOR,
   DEFAULT_SHAPE,
   SHAPE_BY_ID,
@@ -88,7 +89,15 @@ const R = RAYON
 const VB = DEMI_VIEWBOX
 
 const shapeRadii = computed(() => SHAPE_BY_ID.get(props.shape)?.radii ?? null)
-const ink = computed(() => COLOR_BY_ID.get(props.color)?.hex ?? '#0a0a0c')
+/**
+ * Couleur du corps, tenue VISIBLE sur le fond du rendu (regle du favicon, voir
+ * `couleurVisible`) : sur un fond sombre un corps sombre s'inverse en clarte.
+ * C'est le fond qui commande, donc un export a fond blanc ou transparent garde
+ * toujours les couleurs vraies du personnalisateur.
+ */
+const ink = computed(() =>
+  couleurVisible(COLOR_BY_ID.get(props.color)?.hex ?? '#0a0a0c', props.paper)
+)
 const expression = computed(() => EXPRESSION_BY_ID.get(props.expression) ?? null)
 
 const engine = new BotEngine(R, state.value, shapeRadii.value, expression.value)

@@ -134,14 +134,91 @@ export const COLORS: BotColor[] = [
 export const COLOR_BY_ID = new Map<string, BotColor>(COLORS.map((c) => [c.id, c]))
 export const DEFAULT_COLOR = 'encre'
 
+/** RGB d'une couleur `#rrggbb`. */
+function rgb(hex: string): [number, number, number] {
+  const v = parseInt(hex.slice(1), 16)
+  return [(v >> 16) & 255, (v >> 8) & 255, v & 255]
+}
+
 /** Melange deux couleurs hex. Sert a la brume de profondeur des particules. */
 export function mixHex(from: string, to: string, t: number): string {
-  const parse = (h: string) => {
-    const v = parseInt(h.slice(1), 16)
-    return [(v >> 16) & 255, (v >> 8) & 255, v & 255]
-  }
-  const a = parse(from)
-  const b = parse(to)
+  const a = rgb(from)
+  const b = rgb(to)
   const c = a.map((x, i) => Math.round(x + (b[i]! - x) * t))
   return `#${c.map((x) => x.toString(16).padStart(2, '0')).join('')}`
+}
+
+/**
+ * Luminance relative (WCAG, sRGB linearise). C'est la lumiere PERCUE, pas la
+ * moyenne des composantes : c'est elle qui decide si deux couleurs se
+ * confondent a l'oeil.
+ */
+export function luminance(hex: string): number {
+  const canal = (v: number) => {
+    const c = v / 255
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+  }
+  const [r, g, b] = rgb(hex).map(canal)
+  return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!
+}
+
+/** Rapport de contraste WCAG entre deux couleurs, entre 1 et 21. */
+export function contraste(a: string, b: string): number {
+  const [haut, bas] = [luminance(a), luminance(b)].sort((x, y) => y - x)
+  return (haut! + 0.05) / (bas! + 0.05)
+}
+
+/**
+ * Inverse la CLARTE d'une couleur HSL (`l` -> `1 - l`), teinte et saturation
+ * gardees. C'est l'operation du favicon en theme sombre : le corps noir devient
+ * clair sans devenir une autre couleur.
+ */
+export function inverseClarte(hex: string): string {
+  const [r, g, b] = rgb(hex).map((v) => v / 255)
+  const max = Math.max(r!, g!, b!)
+  const min = Math.min(r!, g!, b!)
+  const d = max - min
+  const l = (max + min) / 2
+  // saturation HSL ; indeterminee quand il n'y a pas de teinte (gris pur)
+  const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1))
+  let h = 0
+  if (d !== 0) {
+    if (max === r!) h = ((g! - b!) / d) % 6
+    else if (max === g!) h = (b! - r!) / d + 2
+    else h = (r! - g!) / d + 4
+    h *= 60
+    if (h < 0) h += 360
+  }
+  const l2 = 1 - l
+  // HSL -> RGB sur la teinte et la saturation d'origine
+  const c = (1 - Math.abs(2 * l2 - 1)) * s
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1))
+  const m = l2 - c / 2
+  const seg = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x]
+  return `#${seg.map((v) => Math.round((v! + m) * 255).toString(16).padStart(2, '0')).join('')}`
+}
+
+/** En deca, le fond est juge sombre. */
+const FOND_SOMBRE = 0.25
+
+/** En deca, le corps se confond avec le fond. */
+const CONTRASTE_MIN = 2.2
+
+/**
+ * Couleur de corps retenie pour un fond donne.
+ *
+ * La regle du favicon (`public/favicon.svg`) : « le corps s'inverse en theme
+ * sombre, sinon un disque noir disparait ». Un fond sombre fait disparaitre les
+ * corps sombres — y compris les yeux, qui sont des trous laissant voir ce fond.
+ * On inverse donc la clarte du corps quand il se confond avec lui.
+ *
+ * Elle est commandee par le FOND et non par le theme : c'est le rendu qui sait
+ * sur quoi il est pose. Un export garde ses couleurs quel que soit le theme du
+ * site (son fond est blanc ou transparent), et le theme clair ne la declenche
+ * jamais — l'apparence actuelle du site ne bouge pas d'un pixel.
+ */
+export function couleurVisible(couleur: string, fond: string): string {
+  return luminance(fond) < FOND_SOMBRE && contraste(couleur, fond) < CONTRASTE_MIN
+    ? inverseClarte(couleur)
+    : couleur
 }

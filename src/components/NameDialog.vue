@@ -44,7 +44,7 @@ function submit() {
        passe `margin: 0` sur tout, et c'est cette marge auto qui centre -->
   <dialog
     ref="boite"
-    class="dialogue m-auto w-80 rounded-2xl bg-white p-5 text-[var(--ink)] shadow-xl"
+    class="dialogue m-auto w-80 rounded-2xl bg-[var(--surface)] p-5 text-[var(--ink)] shadow-xl"
     :aria-label="props.title"
     @close="open = false"
     @cancel.prevent="open = false"
@@ -57,7 +57,7 @@ function submit() {
         <input
           ref="field"
           v-model="draft"
-          class="h-9 rounded-lg bg-black/5 px-2.5 text-sm text-[var(--ink)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]"
+          class="h-9 rounded-lg bg-[var(--ink)]/5 px-2.5 text-sm text-[var(--ink)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]"
           type="text"
           maxlength="40"
           required
@@ -67,7 +67,7 @@ function submit() {
       <div class="flex justify-end gap-2">
         <button
           type="button"
-          class="h-8 cursor-pointer rounded-lg px-3 text-xs text-[var(--muted)] transition hover:bg-black/5 hover:text-[var(--ink)]"
+          class="h-8 cursor-pointer rounded-lg px-3 text-xs text-[var(--muted)] transition hover:bg-[var(--ink)]/5 hover:text-[var(--ink)]"
           @click="open = false"
         >
           {{ t('dialog.cancel') }}

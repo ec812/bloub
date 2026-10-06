@@ -75,7 +75,7 @@ function ferme() {
 <template>
   <dialog
     ref="boite"
-    class="dialogue m-auto w-80 rounded-2xl bg-white p-5 text-[var(--ink)] shadow-xl"
+    class="dialogue m-auto w-80 rounded-2xl bg-[var(--surface)] p-5 text-[var(--ink)] shadow-xl"
     :aria-label="t('timeline.export')"
     @close="open = false"
     @cancel.prevent="ferme"
@@ -91,7 +91,7 @@ function ferme() {
         <label
           v-for="(choix, i) in formats"
           :key="choix"
-          class="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition hover:bg-black/5"
+          class="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition hover:bg-[var(--ink)]/5"
         >
           <input
             v-model="format"
@@ -118,7 +118,7 @@ function ferme() {
         <label
           v-for="choix in FONDS_GIF"
           :key="choix"
-          class="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition hover:bg-black/5"
+          class="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition hover:bg-[var(--ink)]/5"
         >
           <input
             v-model="fond"
@@ -146,7 +146,7 @@ function ferme() {
           restait figee sur sa premiere valeur pendant que le pourcentage, lui,
           avancait. Et elle n'apporte rien : la valeur change des centaines de fois.
         -->
-        <div class="h-1.5 overflow-hidden rounded-full bg-black/10">
+        <div class="h-1.5 overflow-hidden rounded-full bg-[var(--ink)]/10">
           <div class="h-full rounded-full bg-[var(--ink)]" :style="{ width: `${pourcent}%` }" />
         </div>
         <div class="flex items-center justify-between gap-2">
@@ -155,7 +155,7 @@ function ferme() {
           </p>
           <button
             type="button"
-            class="h-7 cursor-pointer rounded-lg px-2 text-xs text-[var(--muted)] transition hover:bg-black/5 hover:text-[var(--ink)]"
+            class="h-7 cursor-pointer rounded-lg px-2 text-xs text-[var(--muted)] transition hover:bg-[var(--ink)]/5 hover:text-[var(--ink)]"
             @click="ferme"
           >
             {{ t('dialog.cancel') }}
@@ -166,7 +166,7 @@ function ferme() {
       <div v-else class="flex justify-end gap-2">
         <button
           type="button"
-          class="h-8 cursor-pointer rounded-lg px-3 text-xs text-[var(--muted)] transition hover:bg-black/5 hover:text-[var(--ink)]"
+          class="h-8 cursor-pointer rounded-lg px-3 text-xs text-[var(--muted)] transition hover:bg-[var(--ink)]/5 hover:text-[var(--ink)]"
           @click="ferme"
         >
           {{ t('dialog.cancel') }}

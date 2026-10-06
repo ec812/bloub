@@ -110,6 +110,10 @@ const zh: typeof fr = {
   settings: {
     title: '设置',
     language: '语言',
+    appearance: '外观',
+    theme_systeme: '跟随系统',
+    theme_clair: '浅色',
+    theme_sombre: '深色',
     about: '关于',
     credits: '由 {name} 用 ❤️ 打造',
     creditsAria: 'Jérémy 的 X 主页，在新标签页中打开',

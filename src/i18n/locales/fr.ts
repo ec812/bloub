@@ -132,6 +132,10 @@ export default {
   settings: {
     title: 'Réglages',
     language: 'Langue',
+    appearance: 'Apparence',
+    theme_systeme: 'Système',
+    theme_clair: 'Clair',
+    theme_sombre: 'Sombre',
     about: 'À propos',
     credits: 'Créé avec ❤️ par {name}',
     creditsAria: 'Jérémy sur X, dans un nouvel onglet',

@@ -107,6 +107,10 @@ const en: typeof fr = {
   settings: {
     title: 'Settings',
     language: 'Language',
+    appearance: 'Appearance',
+    theme_systeme: 'System',
+    theme_clair: 'Light',
+    theme_sombre: 'Dark',
     about: 'About',
     credits: 'Made with ❤️ by {name}',
     creditsAria: 'Jérémy on X, in a new tab',

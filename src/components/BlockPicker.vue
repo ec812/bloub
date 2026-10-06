@@ -91,7 +91,7 @@ function pick(state: StateId) {
     ref="panel"
     popover
     @toggle="ouvert = ($event as ToggleEvent).newState === 'open'"
-    class="m-0 w-72 rounded-xl bg-white p-2 shadow-lg ring-1 ring-black/5"
+    class="m-0 w-72 rounded-xl bg-[var(--surface)] p-2 shadow-lg ring-1 ring-[var(--ink)]/5"
     :style="position"
   >
     <div class="grid grid-cols-4 gap-1.5">

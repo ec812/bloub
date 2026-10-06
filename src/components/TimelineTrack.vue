@@ -12,6 +12,7 @@ import {
 } from '@/bot/cycles'
 import { POSES, type StateId } from '@/bot/states'
 import { BASE_SCALE, clampZoom, ticksFor } from '@/ui/timeline'
+import { fond } from '@/ui/theme'
 import { secondes, secondesCourtes, t } from '@/i18n'
 
 /**
@@ -381,8 +382,8 @@ function onRulerMove(e: PointerEvent) {
               class="flex h-full w-full cursor-grab flex-col justify-between overflow-hidden rounded-lg px-1.5 py-1 text-left transition select-none active:cursor-grabbing"
               :class="[
                 i === block
-                  ? 'bg-white ring-2 ring-[var(--ink)] ring-inset'
-                  : 'bg-black/[0.045] hover:bg-black/[0.08]',
+                  ? 'bg-[var(--surface)] ring-2 ring-[var(--ink)] ring-inset'
+                  : 'bg-[var(--ink)]/[0.045] hover:bg-[var(--ink)]/[0.08]',
                 lifted(i) ? 'scale-[1.02] opacity-75 shadow-lg' : ''
               ]"
               :aria-label="t('timeline.blockAria', { state: label(i), duration: secondes(b.duration) })"
@@ -410,7 +411,7 @@ function onRulerMove(e: PointerEvent) {
                   :shape="shape"
                   :color="color"
                   :expression="expression"
-                  :paper="i === block ? '#ffffff' : '#f2f2f2'"
+                  :paper="i === block ? fond.vignetteActive : fond.vignette"
                   :frozen-at="POSES[b.state]"
                 />
               </span>
@@ -443,7 +444,7 @@ function onRulerMove(e: PointerEvent) {
             <button
               v-if="blocks.length > 1"
               type="button"
-              class="absolute top-1 right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-black/10 text-[var(--ink)] opacity-0 transition group-hover:opacity-100 hover:bg-black/20 focus-visible:opacity-100"
+              class="absolute top-1 right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-[var(--ink)]/10 text-[var(--ink)] opacity-0 transition group-hover:opacity-100 hover:bg-[var(--ink)]/20 focus-visible:opacity-100"
               :aria-label="t('timeline.blockRemoveAria', { state: label(i) })"
               @click="removeBlock(i)"
             >

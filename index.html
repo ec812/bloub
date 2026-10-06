@@ -12,6 +12,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!--
+      Amorce du theme, avant la premiere peinture : sans elle, une visite en
+      theme sombre s'ouvrirait sur une page claire le temps que les modules
+      tournent. Regle COMPLETE (validation du stockage, replis, suivi des
+      changements de l'OS) dans src/ui/theme.ts ; ici on ne fait que poser
+      l'attribut que `styles.css` lit, et un echec n'empeche rien — au pire la
+      page s'ouvre en clair et le module la reprend juste apres. `localStorage`
+      peut jeter (acces refuse), d'ou le try.
+    -->
+    <script>
+      try {
+        const choix = localStorage.getItem('bloub:theme')
+        const sombre =
+          choix === 'sombre' ||
+          (choix !== 'clair' && matchMedia('(prefers-color-scheme: dark)').matches)
+        if (sombre) document.documentElement.dataset.theme = 'sombre'
+      } catch {
+        // stockage refuse : on reste sur le theme clair, le module decidera
+      }
+    </script>
+
     <title>bloub, avatar SVG animé</title>
     <!--
       « bloub » est le nom du produit ; « l'avatar du bot de x.ai » est la
@@ -86,8 +107,15 @@
     <!-- pas de site.webmanifest : il ne sert qu'a l'installation PWA, et
          couterait trois icones de plus pour aucun gain de referencement -->
 
+    <!--
+      Couleur de la barre du navigateur : celle de la page dans chaque eclairage
+      (les memes valeurs que `--paper` dans src/styles.css). Les `media` suivent
+      la preference du SYSTEME : un theme force dans l'application (« Clair » en
+      OS sombre) laisse la barre du navigateur sur l'autre teinte — c'est le seul
+      ecart accepte, `theme-color` ne connaissant pas nos attributs.
+    -->
     <meta name="theme-color" content="#f9f9f9" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0a0a0c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#1e222b" media="(prefers-color-scheme: dark)" />
   </head>
   <body>
     <div id="app"></div>

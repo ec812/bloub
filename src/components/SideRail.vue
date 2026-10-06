@@ -42,7 +42,7 @@ const muted = ref<ViewId | null>(null)
     les deux prenait 260 px sur 812.
   -->
   <nav
-    class="fixed top-3 left-1/2 z-20 -translate-x-1/2 rounded-2xl border border-[var(--line)] bg-white/85 p-1.5 shadow-sm backdrop-blur lg:top-1/2 lg:left-4 lg:translate-x-0 lg:-translate-y-1/2"
+    class="fixed top-3 left-1/2 z-20 -translate-x-1/2 rounded-2xl border border-[var(--line)] bg-[var(--surface)]/85 p-1.5 shadow-sm backdrop-blur lg:top-1/2 lg:left-4 lg:translate-x-0 lg:-translate-y-1/2"
     :aria-label="t('rail.nav')"
   >
     <ul class="flex gap-1 lg:flex-col">
@@ -58,7 +58,7 @@ const muted = ref<ViewId | null>(null)
           :class="
             view === item.id
               ? 'bg-[var(--ink)] text-[var(--paper)]'
-              : 'text-[var(--muted)] hover:bg-black/5 hover:text-[var(--ink)]'
+              : 'text-[var(--muted)] hover:bg-[var(--ink)]/5 hover:text-[var(--ink)]'
           "
           :aria-label="item.label"
           :aria-current="view === item.id ? 'page' : undefined"

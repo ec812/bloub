@@ -24,7 +24,7 @@ function confirm() {
 <template>
   <dialog
     ref="boite"
-    class="dialogue m-auto w-80 rounded-2xl bg-white p-5 text-[var(--ink)] shadow-xl"
+    class="dialogue m-auto w-80 rounded-2xl bg-[var(--surface)] p-5 text-[var(--ink)] shadow-xl"
     :aria-label="props.title"
     @close="open = false"
     @cancel.prevent="open = false"
@@ -39,14 +39,14 @@ function confirm() {
         <button
           type="button"
           autofocus
-          class="h-8 cursor-pointer rounded-lg px-3 text-xs text-[var(--muted)] transition hover:bg-black/5 hover:text-[var(--ink)]"
+          class="h-8 cursor-pointer rounded-lg px-3 text-xs text-[var(--muted)] transition hover:bg-[var(--ink)]/5 hover:text-[var(--ink)]"
           @click="open = false"
         >
           {{ t('dialog.cancel') }}
         </button>
         <button
           type="button"
-          class="h-8 cursor-pointer rounded-lg bg-[var(--danger)] px-3 text-xs text-white transition hover:opacity-90 active:scale-95"
+          class="h-8 cursor-pointer rounded-lg bg-[var(--danger)] px-3 text-xs text-[var(--paper)] transition hover:opacity-90 active:scale-95"
           @click="confirm"
         >
           {{ props.confirmLabel }}

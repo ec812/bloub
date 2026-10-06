@@ -61,7 +61,7 @@ onBeforeUnmount(() => window.removeEventListener('pointerdown', onOutside))
     >
       <button
         type="button"
-        class="flex cursor-pointer items-center gap-2 py-2.5 pr-3 pl-3.5 text-sm font-medium transition hover:bg-white/10 disabled:cursor-default"
+        class="flex cursor-pointer items-center gap-2 py-2.5 pr-3 pl-3.5 text-sm font-medium transition hover:bg-[var(--paper)]/10 disabled:cursor-default"
         :disabled="occupe"
         @click="lance(ACTION_DEFAUT)"
       >
@@ -102,7 +102,7 @@ onBeforeUnmount(() => window.removeEventListener('pointerdown', onOutside))
 
       <button
         type="button"
-        class="flex cursor-pointer items-center px-2.5 transition hover:bg-white/10 disabled:cursor-default"
+        class="flex cursor-pointer items-center px-2.5 transition hover:bg-[var(--paper)]/10 disabled:cursor-default"
         :disabled="occupe"
         :aria-label="t('export.more')"
         aria-haspopup="true"
@@ -138,7 +138,7 @@ onBeforeUnmount(() => window.removeEventListener('pointerdown', onOutside))
         v-for="action in actions"
         :key="action.id"
         type="button"
-        class="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition hover:bg-black/5"
+        class="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm transition hover:bg-[var(--ink)]/5"
         :class="action.id === 'copie' && 'mt-1 border-t border-[var(--line)] pt-2.5'"
         @click="lance(action.id)"
       >

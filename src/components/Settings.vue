@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { langue, LANGUES, t } from '@/i18n'
+import { langue, LANGUES, t, type Langue } from '@/i18n'
+import { THEMES, theme, type Theme } from '@/ui/theme'
 
 /** Comptes de l'auteur. */
 const X = 'https://x.com/worlz_'
@@ -19,7 +20,7 @@ const credits = computed(() => {
 })
 
 /**
- * Clavier du groupe de radios.
+ * Clavier commun aux deux groupes de radios (langue, apparence).
  *
  * Declarer `role="radiogroup"` PROMET ce comportement, et des `<button>` ne le
  * donnent pas tout seuls : les fleches doivent deplacer le choix, et le groupe
@@ -27,17 +28,31 @@ const credits = computed(() => {
  * `tabindex` mobile dans le gabarit — seule l'option cochee est atteignable par
  * Tab, les fleches font le reste, comme dans un groupe de radios natif.
  */
-function auClavier(event: KeyboardEvent, index: number) {
+function auClavier(
+  event: KeyboardEvent,
+  index: number,
+  ids: readonly string[],
+  choisir: (id: string) => void
+) {
   const pas = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key]
   if (!pas) return
   event.preventDefault()
   // on tourne en rond, comme un groupe de radios natif
-  const cible = LANGUES[(index + pas + LANGUES.length) % LANGUES.length]!
-  langue.value = cible.id
+  const cible = ids[(index + pas + ids.length) % ids.length]!
+  choisir(cible)
   // le focus suit le choix, sinon les fleches suivantes repartent de l'ancien
   const boutons = (event.currentTarget as HTMLElement).parentElement?.children
-  const suivant = boutons?.[LANGUES.indexOf(cible)]
+  const suivant = boutons?.[ids.indexOf(cible)]
   if (suivant instanceof HTMLElement) suivant.focus()
+}
+
+const IDS_LANGUES: readonly string[] = LANGUES.map((l) => l.id)
+function langueClavier(event: KeyboardEvent, index: number) {
+  auClavier(event, index, IDS_LANGUES, (id) => (langue.value = id as Langue))
+}
+
+function themeClavier(event: KeyboardEvent, index: number) {
+  auClavier(event, index, THEMES, (id) => (theme.value = id as Theme))
 }
 </script>
 
@@ -69,11 +84,11 @@ function auClavier(event: KeyboardEvent, index: number) {
         :aria-label="l.nom"
         :lang="l.tag"
         :tabindex="l.id === langue ? 0 : -1"
-        @keydown="auClavier($event, i)"
+        @keydown="langueClavier($event, i)"
         class="flex cursor-pointer items-center gap-2.5 rounded-xl border px-3 py-2 text-left text-sm transition"
         :class="
           l.id === langue
-            ? 'border-[var(--ink)] bg-white font-medium'
+            ? 'border-[var(--ink)] bg-[var(--surface)] font-medium'
             : 'border-[var(--line)] text-[var(--muted)] hover:border-[var(--muted)] hover:text-[var(--ink)]'
         "
         @click="langue = l.id"
@@ -84,6 +99,53 @@ function auClavier(event: KeyboardEvent, index: number) {
         <span class="flex-1">{{ l.nom }}</span>
         <svg
           v-if="l.id === langue"
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          aria-hidden="true"
+          class="shrink-0"
+        >
+          <path
+            d="M2.5 6.4 4.8 8.7 9.5 3.6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <h2 class="mt-6 text-sm font-semibold">{{ t('settings.appearance') }}</h2>
+
+    <!--
+      Meme groupe de radios que la langue, contrat clavier compris — le volet
+      est le seul endroit du projet qui en implemente un pour de bon, il n'y en
+      a qu'a suivre. « Système » suit l'OS en direct (cf. `src/ui/theme.ts`),
+      les deux autres forcent.
+    -->
+    <div class="mt-2 flex flex-col gap-1" role="radiogroup" :aria-label="t('settings.appearance')">
+      <button
+        v-for="(th, i) in THEMES"
+        :key="th"
+        type="button"
+        role="radio"
+        :aria-checked="th === theme"
+        :aria-label="t(`settings.theme_${th}`)"
+        :tabindex="th === theme ? 0 : -1"
+        @keydown="themeClavier($event, i)"
+        class="flex cursor-pointer items-center gap-2.5 rounded-xl border px-3 py-2 text-left text-sm transition"
+        :class="
+          th === theme
+            ? 'border-[var(--ink)] bg-[var(--surface)] font-medium'
+            : 'border-[var(--line)] text-[var(--muted)] hover:border-[var(--muted)] hover:text-[var(--ink)]'
+        "
+        @click="theme = th"
+      >
+        <span class="flex-1">{{ t(`settings.theme_${th}`) }}</span>
+        <svg
+          v-if="th === theme"
           width="12"
           height="12"
           viewBox="0 0 12 12"
