@@ -26,7 +26,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "mediabunny": "^1.54.0",
+    "mediabunny": "^1.66.0",
     "vue": "^3.5.45"
   },
   "devDependencies": {
