@@ -30,7 +30,7 @@
     "vue": "^3.5.41"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
+    "@tailwindcss/vite": "^4.3.5",
     "@types/node": "^26.0.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "happy-dom": "^20.11.2",
