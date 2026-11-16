@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "mediabunny": "^1.54.0",
-    "vue": "^3.5.41"
+    "vue": "^3.5.45"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.5",
